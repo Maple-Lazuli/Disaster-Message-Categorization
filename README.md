@@ -61,10 +61,10 @@ and classified. Just navigate to that link by clicking it or pasting __http://0.
 
 ## Acknowledgements
 The following sources were crucial to the development of this project
-1. Udacity - Udacity's Data Scientist course introduced me to Flask as well as variety of natural language processing and machine learning practices that were used in this project.
-2. Plotly - Plotly was used to render the graphs and data table seen on the overview page.
-3. scikit-learn - scikit-learn was used for the machine learning portions of this project.
-4. SQLAlchemy - SQLAlchemy was used to load the dataset after extraction and transformation.
-5. Natural Language Tool Kit (NTLK) - NLTK was used for the natural language processing portion of this project
-6. Numpy - Numpy was used for numerical computations in the extraction and transformation portion of this project
-7. Pandas - Pandas was used for data analysis in the exploratory, extraction, and transformation portions of this project.
+1. __Udacity__ - Udacity's Data Scientist course introduced me to Flask as well as variety of natural language processing and machine learning practices that were used in this project.
+2. __Plotly__ - Plotly was used to render the graphs and data table seen on the overview page.
+3. __scikit-learn__ - scikit-learn was used for the machine learning portions of this project.
+4. __SQLAlchemy__ - SQLAlchemy was used to load the dataset after extraction and transformation.
+5. __Natural Language Tool Kit (NTLK)__ - NLTK was used for the natural language processing portion of this project
+6. __Numpy__ - Numpy was used for numerical computations in the extraction and transformation portion of this project
+7. __Pandas__ - Pandas was used for data analysis in the exploratory, extraction, and transformation portions of this project.
