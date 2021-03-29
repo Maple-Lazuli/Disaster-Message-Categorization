@@ -19,6 +19,12 @@ Summary of Routes:
 
 
 def tokenize(text):
+    """
+    Takes the input string and splits it into a list. Then the function normalizes the text, removes extra whitespace,
+    and lemmatizes the elements
+    :param text: String containing natural language
+    :return: a list of tokens
+    """
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
     clean_tokens = []
@@ -29,30 +35,41 @@ def tokenize(text):
 
 
 def generate_df_sums(input_df):
+    """
+    Generates a dataframe containing a count of occurrences for each of the tags for the message.
+    :param input_df: The dataset used for modeling to process
+    :return: A dataframe containing the occurrence counts
+    """
     dataframe = input_df.drop(['id', 'message', "original", 'genre'], axis=1)
     return pd.DataFrame({'Category': dataframe.sum(axis=0).index, 'Occurrences': dataframe.sum(axis=0).values})
 
 
-# load data
+# load data exported from process_data.py
 engine = create_engine('sqlite:///../data/DisasterResponse.db')
 df = pd.read_sql_table('messages', engine)
 
-# load model
+# load model exported from train_classifier.py
 model = joblib.load("../models/classifier.pkl")
 
-# Load Accuracy Data Frame
+# Load accuracy dataframe from train_classifier.py
 eval_df = pd.read_pickle("../models/eval.pkl")
 
 
 @app.route('/')
 @app.route('/index')
 def index():
+    """
+    :return: A webpage that just contain the message submit form
+    """
     return render_template('index.html')
 
 
 @app.route('/go')
 def go():
-
+    """
+    Takes the url argument from an HTTP GET message and processes the argument in the model
+    :return: A webpage containing the results of the message processing in the model
+    """
     query = request.args.get('query', '')
     classification_labels = model.predict([query])[0]
     classification_results = dict(zip(df.columns[4:], classification_labels))
@@ -65,6 +82,10 @@ def go():
 
 @app.route('/overview')
 def overview():
+    """
+    Generates graphs and tables based on the model and dataset and then converts them to a JSON string
+    :return: A webpage containing graphs and a table of the dataset and the machine learning model
+    """
     cate_sums = generate_df_sums(df)
     dataframe = df.drop(['id', 'genre'], axis=1)
     dataframe = dataframe[0:3]
@@ -124,6 +145,9 @@ def overview():
 
 @app.route("/sources")
 def sources():
+    """
+    :return: A webpage containing due credit for the creation of the project.
+    """
     return render_template('sources.html')
 
 def main():
