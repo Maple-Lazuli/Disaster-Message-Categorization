@@ -143,12 +143,14 @@ def overview():
     accuracy_json = json.dumps(accuracy_graph, cls=plotly.utils.PlotlyJSONEncoder)
     return render_template('overview.html', countsJSON=counts_json, tableJSON=table_json, accuracyJSON=accuracy_json)
 
+
 @app.route("/sources")
 def sources():
     """
     :return: A webpage containing due credit for the creation of the project.
     """
     return render_template('sources.html')
+
 
 def main():
     app.run(host='0.0.0.0', port=3001, debug=True)
