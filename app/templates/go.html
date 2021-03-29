@@ -1,14 +1,28 @@
-{% extends "master.html" %}
+{% extends "header.html" %}
 {% block title %}Results{% endblock %}
-
-{% block message %}
+{% block content_root %}
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="text-center">Disaster Response Classification</h1>
+        <p class="text-center">Classify message for disaster response support needed</p>
+        <hr />
+        <div class="row">
+            <div class="col-lg-12 form-group-lg">
+                <form action="/go" method="get">
+                    <input type="text" class="form-control form-control-lg" name="query" placeholder="Enter a message to classify">
+                    <div class="col-lg-offset-5">
+                        <button type="submit" class="btn btn-lg btn-success">Classify Message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     <hr />
-    <h4 class="text-center">MESSAGE</h4>
+    <h4 class="text-center">MESSAGE SENT:</h4>
     <p class="text-center"><i>{{query}}</i></p>
-{% endblock %}
-
-{% block content %}
-    <h1 class="text-center">Result</h1>
+    </div>
+</div>
+<div class="container">
+    <h1 class="text-center">CLASSIFICATION RESULTS</h1>
         <ul class="list-group">
             {% for category, classification in classification_result.items() %}
                 {% if classification == 1 %}
@@ -17,8 +31,6 @@
                     <li class="list-group-item list-group-item-dark text-center">{{category.replace('_', ' ').title()}}</li>
                 {% endif %}
             {% endfor %}
-
-        </div>
-    </div>
-
+        </ul>
+</div>
 {% endblock %}

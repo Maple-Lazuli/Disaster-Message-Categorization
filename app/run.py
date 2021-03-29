@@ -4,10 +4,8 @@ import pandas as pd
 
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
-from sklearn.metrics import classification_report
-import numpy as np
 from flask import Flask
-from flask import render_template, request, jsonify
+from flask import render_template, request
 from plotly.graph_objs import Bar, Figure, Table
 import joblib
 from sqlalchemy import create_engine
@@ -47,73 +45,7 @@ eval_df = pd.read_pickle("../models/eval.pkl")
 @app.route('/')
 @app.route('/index')
 def index():
-    # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
-    cate_sums = generate_df_sums(df)
-    dataframe = df.drop(['id'], axis=1)
-    dataframe = dataframe[0:3]
-    table = Figure([Table(
-        header=dict(
-            values=dataframe.columns[1:11],
-            font=dict(size=12),
-            align="left"
-        ),
-        cells=dict(
-            values=[dataframe[k].tolist() for k in dataframe.columns[1:11]],
-            align="left")
-    )
-    ])
-
-    table.update_layout(
-        autosize=True,
-    )
-    # create visuals
-    # TODO: Below is an example - modify to create your own visuals
-    graphs = [
-        {
-            'data': [
-                Bar(
-                    x=cate_sums['Category'],
-                    y=cate_sums['Occurrences']
-                )
-            ],
-
-            'layout': {
-                'title': '<b> Occurrences By Category </b>',
-                'yaxis': {
-                    'title': "<b> Occurrences % </b>"
-                },
-                'xaxis': {
-                    'title': "<b> Category </b>"
-                }
-            }
-        },
-        {
-            'data': [
-                Bar(
-                    x=eval_df['Category'],
-                    y=eval_df['Accuracy']
-                )
-            ],
-
-            'layout': {
-                'title': '<b> Accuracy of Model Categories </b>',
-                'yaxis': {
-                    'title': "<b> Accuracy % </b>"
-                },
-                'xaxis': {
-                    'title': "<b> Category </b>"
-                }
-            }
-        }
-    ]
-
-    # encode plotly graphs in JSON
-    ids = ["graph-{}".format(i) for i, _ in enumerate(graphs)]
-    graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
-    # render web page with plotly graphs
-    tableJSON = json.dumps(table, cls=plotly.utils.PlotlyJSONEncoder)
-    return render_template('master.html', ids=ids, graphJSON=graphJSON, tableJSON=tableJSON)
+    return render_template('index.html')
 
 
 # web page that handles user query and displays model results
@@ -132,6 +64,73 @@ def go():
         query=query,
         classification_result=classification_results
     )
+
+
+@app.route('/overview')
+def overview():
+    # extract data needed for visuals
+    cate_sums = generate_df_sums(df)
+    dataframe = df.drop(['id', 'genre'], axis=1)
+    dataframe = dataframe[0:3]
+    table = Figure([Table(
+        header=dict(
+            values=dataframe.columns[0:11],
+            font=dict(size=12),
+            align="left"
+        ),
+        cells=dict(
+            values=[dataframe[k].tolist() for k in dataframe.columns[0:11]],
+            align="left")
+    )
+    ])
+
+    table.update_layout(
+        autosize=True,
+    )
+    # create visuals
+    counts_graph =  {
+            'data': [
+                Bar(
+                    x=cate_sums['Category'],
+                    y=cate_sums['Occurrences']
+                )
+            ],
+
+            'layout': {
+                'title': '<b> Occurrences By Category </b>',
+                'yaxis': {
+                    'title': "<b> Occurrences % </b>"
+                },
+                'xaxis': {
+                    'title': "<b> Category </b>"
+                }
+            }
+        }
+    accuracy_graph = {
+            'data': [
+                Bar(
+                    x=eval_df['Category'],
+                    y=eval_df['Accuracy']
+                )
+            ],
+
+            'layout': {
+                'title': '<b> Accuracy of Model Categories </b>',
+                'yaxis': {
+                    'title': "<b> Accuracy % </b>"
+                },
+                'xaxis': {
+                    'title': "<b> Category </b>"
+                }
+            }
+        }
+    # encode plotly graphs in JSON
+    tableJSON = json.dumps(table, cls=plotly.utils.PlotlyJSONEncoder)
+    countsJSON = json.dumps(counts_graph, cls=plotly.utils.PlotlyJSONEncoder)
+    accuracyJSON = json.dumps(accuracy_graph, cls=plotly.utils.PlotlyJSONEncoder)
+    # render web page with plotly graphs
+    return render_template('overview.html', countsJSON=countsJSON, tableJSON=tableJSON, accuracyJSON=accuracyJSON)
+
 
 
 def main():

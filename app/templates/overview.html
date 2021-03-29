@@ -1,0 +1,43 @@
+{% extends "header.html" %}
+{% block content_root %}
+<div class="jumbotron">
+    <div class="container">
+        <hr />
+        <h1 class="">Overview</h1>
+        <p class="">The purpose of the project is to use categorized messages that contain disaster
+            response information then predict how a given message should be categorized. <br /><br />
+        The sections below detail the dataset used and the accuracy of the current model.</p>
+    </div>
+</div>
+<div class="container">
+        <h2>Dataset</h2>
+        <p>The table below contains a partial row form the dataset used in this project. The original and message
+        fields are the orginal and English translations of the messages. The other fields are indicators on how the
+        message was categorized.</p>
+        <div id="Datatable">
+        </div>
+        <script>
+            var table = {{tableJSON | safe}};
+            Plotly.plot("Datatable", table, {});
+        </script>
+        <hr />
+        <h2>Occurrences By Category</h2>
+        <p>The bar chart below shows the number of occurrences for each category that the model classifies on.</p>
+        <div id="Counts">
+        </div>
+        <script>
+            var counts = {{countsJSON | safe}};
+            Plotly.plot("Counts", counts, counts.layout);
+        </script>
+        <hr />
+        <h2>Accuracy By Category</h2>
+        <p>The bar chart below shows the classification accuracy of the model on each category.</p>
+        <div id="Accuracy">
+        </div>
+        <script>
+            var accuracy = {{accuracyJSON | safe}};
+            Plotly.plot("Accuracy", accuracy, accuracy.layout);
+        </script>
+</div>
+
+{% endblock %}
