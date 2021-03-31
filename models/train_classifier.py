@@ -9,6 +9,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report
+from sklearn.model_selection import GridSearchCV
 import pickle
 import numpy as np
 
@@ -53,11 +54,11 @@ def build_model():
         ('tfidf', TfidfTransformer()),
         ('clf', MultiOutputClassifier(KNeighborsClassifier()))
     ])
-
     parameters = {
         'vect__ngram_range': ((1, 1), (1,2), (1, 5)),
         'clf__estimator__n_neighbors': (5, 10, 15)
     }
+
     cv = GridSearchCV(pipeline, param_grid=parameters, verbose=4, n_jobs=6)
     return cv
 
